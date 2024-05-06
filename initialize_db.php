@@ -10,7 +10,7 @@ try {
     $db->exec("CREATE TABLE IF NOT EXISTS bonsais (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         species VARCHAR(75) NOT NULL,
-        dob VARCHAR(75),
+        origin_story VARCHAR(75),
         geolocation VARCHAR(255) NOT NULL,
         photo_url_arr TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
