@@ -11,8 +11,8 @@ try {
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         species VARCHAR(75) NOT NULL,
         dob VARCHAR(75),
-        place VARCHAR(255) NOT NULL,
-        photo_url TEXT,
+        geolocation VARCHAR(255) NOT NULL,
+        photo_url_arr TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
 
@@ -20,4 +20,3 @@ try {
 } catch (PDOException $e) {
     echo "An error occurred: " . $e->getMessage();
 }
-?>
