@@ -24,7 +24,8 @@ class BonsaiController
 
         try {
             // Prepare SQL statement
-            $stmt = $db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, photo_url) VALUES (:species, :origin_story, :geolocation, :photo_url)");
+            $stmt = $db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, photo_url) 
+            VALUES (:species, :origin_story, :geolocation, :photo_url)");
             $stmt->bindParam(':species', $species);
             $stmt->bindParam(':origin_story', $origin_story);
             $stmt->bindParam(':geolocation', $geolocation);
@@ -33,9 +34,11 @@ class BonsaiController
             $stmt->execute();
 
             $lastid = $db->lastInsertId();
-            echo "$species bonsai id# $lastid added successfully";
+            http_response_code(201);
+            echo json_encode(["message" => "$species bonsai id# $lastid added successfully"]);
         } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+            http_response_code(500);
+            echo json_encode(["error" => $e->getMessage()]);
         }
     }
 }

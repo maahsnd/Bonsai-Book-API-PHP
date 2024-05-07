@@ -16,6 +16,7 @@ if ($requestMethod == 'OPTIONS') {
     header("Access-Control-Allow-Origin: *");
     header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header('Content-Type: application/json');
     http_response_code(200);
     exit();
 }
@@ -32,9 +33,9 @@ if (array_key_exists($requestUri, $routes) && $_SERVER['REQUEST_METHOD'] === 'PO
         $controller->$method();
     } else {
         http_response_code(405);
-        echo 'Method Not Allowed';
+        echo json_encode(["error" => 'Method Not Allowed']);
     }
 } else {
     http_response_code(404);
-    echo 'Not Found';
+    echo json_encode(["error" => 'Not Found']);
 }
