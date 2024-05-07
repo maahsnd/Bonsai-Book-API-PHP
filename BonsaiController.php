@@ -1,16 +1,5 @@
 <?php
-
-function sanitize($input)
-{
-    if ($input) {
-        $input = trim($input);
-        $input = stripslashes($input);
-        $input = htmlspecialchars($input);
-    } else {
-        $input = '';
-    }
-    return $input;
-}
+require_once 'Utils.php';
 
 class BonsaiController
 {
@@ -23,9 +12,9 @@ class BonsaiController
 
     public function addBonsai()
     {
-        $species = sanitize($_POST['species']);
-        $origin_story = sanitize($_POST['origin_story']);
-        $geolocation = sanitize($_POST['geolocation']);
+        $species = Utilities::sanitize($_POST['species']);
+        $origin_story = Utilities::sanitize($_POST['origin_story']);
+        $geolocation = Utilities::sanitize($_POST['geolocation']);
         $photo_url = $_POST['photo_url'];
 
         try {
