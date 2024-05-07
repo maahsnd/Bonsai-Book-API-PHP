@@ -40,11 +40,9 @@ class BonsaiController
             $stmt->execute();
 
             $lastid = $this->db->lastInsertId();
-            http_response_code(201);
-            echo json_encode(["message" => "$species bonsai id# $lastid added successfully"]);
+            return $lastid;
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["error" => $e->getMessage()]);
+            return $e->getMessage();
         }
     }
 
@@ -56,11 +54,9 @@ class BonsaiController
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
-            http_response_code(200);
-            echo json_encode(($result));
+            return $result;
         } catch (PDOException $e) {
-            http_response_code(500);
-            echo json_encode(["error" => $e->getMessage()]);
+            return $e->getMessage();
         }
     }
 }
