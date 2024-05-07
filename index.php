@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Database.php';
-require_once 'BonsaiController.php';
+require_once 'database.php';
+require_once 'bonsai-controller.php';
 
 $database = new Database();
 $dbConnection = $database->getConnection();
