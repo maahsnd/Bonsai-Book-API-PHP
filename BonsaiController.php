@@ -14,6 +14,13 @@ function sanitize($input)
 
 class BonsaiController
 {
+    private $db;
+
+    public function __construct(PDO $db)
+    {
+        $this->db = $db;
+    }
+
     public function addBonsai()
     {
         $species = sanitize($_POST['species']);
@@ -21,14 +28,9 @@ class BonsaiController
         $geolocation = sanitize($_POST['geolocation']);
         $photo_url = $_POST['photo_url'];
 
-
-        // Set up SQLite connection
-        $db = new PDO('sqlite:bonsai_book.db');
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         try {
             // Prepare SQL statement
-            $stmt = $db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, photo_url) 
+            $stmt = $this->db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, photo_url) 
             VALUES (:species, :origin_story, :geolocation, :photo_url)");
             $stmt->bindParam(':species', $species);
             $stmt->bindParam(':origin_story', $origin_story);
@@ -37,7 +39,7 @@ class BonsaiController
 
             $stmt->execute();
 
-            $lastid = $db->lastInsertId();
+            $lastid = $this->db->lastInsertId();
             http_response_code(201);
             echo json_encode(["message" => "$species bonsai id# $lastid added successfully"]);
         } catch (PDOException $e) {
@@ -48,12 +50,9 @@ class BonsaiController
 
     public function fetchAllBonsai()
     {
-        // Set up SQLite connection
-        $db = new PDO('sqlite:bonsai_book.db');
-        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         try {
-            $stmt = $db->prepare("SELECT * FROM bonsais");
+            $stmt = $this->db->prepare("SELECT * FROM bonsais");
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();

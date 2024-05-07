@@ -1,5 +1,11 @@
 <?php
 
+require 'Database.php';
+require 'BonsaiController.php';
+
+$database = new Database();
+$dbConnection = $database->getConnection();
+
 $routes = [
     '/add-bonsai' => [
         'controller' => 'BonsaiController',
@@ -30,7 +36,7 @@ if (array_key_exists($requestUri, $routes)) {
     $route = $routes[$requestUri];
 
     require $route['controller'] . '.php';
-    $controller = new $route['controller']();
+    $controller = new $route['controller']($dbConnection);
     $method = $route['method'];
 
     if (method_exists($controller, $method)) {
