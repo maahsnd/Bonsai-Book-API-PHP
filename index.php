@@ -4,6 +4,10 @@ $routes = [
     '/add-bonsai' => [
         'controller' => 'BonsaiController',
         'method' => 'addBonsai'
+    ],
+    '/get-bonsai' => [
+        'controller' => 'BonsaiController',
+        'method' => 'fetchAllBonsai'
     ]
 ];
 
@@ -22,7 +26,7 @@ if ($requestMethod == 'OPTIONS') {
 }
 
 // Route the request
-if (array_key_exists($requestUri, $routes) && $_SERVER['REQUEST_METHOD'] === 'POST') {
+if (array_key_exists($requestUri, $routes)) {
     $route = $routes[$requestUri];
 
     require $route['controller'] . '.php';

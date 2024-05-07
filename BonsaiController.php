@@ -2,9 +2,13 @@
 
 function sanitize($input)
 {
-    $input = trim($input);
-    $input = stripslashes($input);
-    $input = htmlspecialchars($input);
+    if ($input) {
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+    } else {
+        $input = '';
+    }
     return $input;
 }
 
@@ -36,6 +40,25 @@ class BonsaiController
             $lastid = $db->lastInsertId();
             http_response_code(201);
             echo json_encode(["message" => "$species bonsai id# $lastid added successfully"]);
+        } catch (PDOException $e) {
+            http_response_code(500);
+            echo json_encode(["error" => $e->getMessage()]);
+        }
+    }
+
+    public function fetchAllBonsai()
+    {
+        // Set up SQLite connection
+        $db = new PDO('sqlite:bonsai_book.db');
+        $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        try {
+            $stmt = $db->prepare("SELECT * FROM bonsais");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            http_response_code(200);
+            echo json_encode(($result));
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode(["error" => $e->getMessage()]);
