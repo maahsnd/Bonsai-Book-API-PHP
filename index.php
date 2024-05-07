@@ -1,7 +1,7 @@
 <?php
 
-require 'Database.php';
-require 'BonsaiController.php';
+require_once 'Database.php';
+require_once 'BonsaiController.php';
 
 $database = new Database();
 $dbConnection = $database->getConnection();
@@ -35,7 +35,6 @@ if ($requestMethod == 'OPTIONS') {
 if (array_key_exists($requestUri, $routes)) {
     $route = $routes[$requestUri];
 
-    require $route['controller'] . '.php';
     $controller = new $route['controller']($dbConnection);
     $method = $route['method'];
 
