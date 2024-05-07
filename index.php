@@ -14,12 +14,25 @@ $routes = [
     '/get-bonsai' => [
         'controller' => 'BonsaiController',
         'method' => 'fetchAllBonsai'
+    ],
+    '/get-bonsai/single' => [
+        'controller' => 'BonsaiController',
+        'method' => 'fetchOneBonsai'
     ]
 ];
 
 // Parse the request
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
+
+// Handle get single bonsai request
+$id = null;
+
+// Check if the URI is for the 'get-bonsai' route and ends with a number
+if (preg_match('/^\/get-bonsai\/(\d+)$/', $requestUri, $matches)) {
+    $id = $matches[1]; // Capture the numeric ID
+    $requestUri = '/get-bonsai/single'; // Normalize the URI to match the route definition
+}
 
 // Handle CORS preflight requests
 if ($requestMethod == 'OPTIONS') {
@@ -39,7 +52,7 @@ if (array_key_exists($requestUri, $routes)) {
     $method = $route['method'];
 
     if (method_exists($controller, $method)) {
-        $result = $controller->$method();
+        $result = $id ? $controller->$method($id) : $controller->$method();
         http_response_code(200);
         echo json_encode($result);
     } else {

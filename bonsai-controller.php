@@ -48,4 +48,16 @@ class BonsaiController
             return $e->getMessage();
         }
     }
+    public function fetchOneBonsai($id)
+    {
+        try {
+            $stmt = $this->db->prepare("SELECT * FROM bonsais WHERE id=$id");
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            return $result;
+        } catch (PDOException $e) {
+            return $e->getMessage();
+        }
+    }
 }
