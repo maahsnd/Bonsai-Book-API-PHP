@@ -12,7 +12,7 @@ try {
         species VARCHAR(75) NOT NULL,
         origin_story VARCHAR(75),
         geolocation VARCHAR(255) NOT NULL,
-        photo_url_arr TEXT,
+        photo_url TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
 
