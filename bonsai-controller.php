@@ -73,6 +73,8 @@ class BonsaiController
             http_response_code(405);
             return;
         }
+
+
         $fieldsToUpdate = [];
         $data = [];
 
@@ -107,9 +109,10 @@ class BonsaiController
             foreach ($data as $key => &$value) {
                 $stmt->bindParam(':' . $key, $value);
             }
-            $result = $stmt->execute();
-            http_response_code((200));
-            echo json_encode($result);
+            $stmt->execute();
+            $rowCount = $stmt->rowCount();
+            http_response_code(200);
+            echo json_encode(["rows_updated" => $rowCount]);
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode($e->getMessage());
