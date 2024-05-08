@@ -15,9 +15,13 @@ $routes = [
         'controller' => 'BonsaiController',
         'method' => 'fetchAllBonsai'
     ],
-    '/get-bonsai/single' => [
+    '/get-one-bonsai' => [
         'controller' => 'BonsaiController',
         'method' => 'fetchOneBonsai'
+    ],
+    'update-bonsai' => [
+        'controller' => 'BonsaiController',
+        'method' => 'updateBonsai'
     ]
 ];
 
@@ -25,13 +29,13 @@ $routes = [
 $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-// Handle get single bonsai request
+// Handle requests for specific bonsais
 $id = null;
 
-// Check if the URI is for the 'get-bonsai' route and ends with a number
-if (preg_match('/^\/get-bonsai\/(\d+)$/', $requestUri, $matches)) {
-    $id = $matches[1]; // Capture the numeric ID
-    $requestUri = '/get-bonsai/single'; // Normalize the URI to match the route definition
+// Regular expression to detect URIs ending with numerical ID
+if (preg_match('/^(\/[a-z\-]+)\/(\d+)$/', $requestUri, $matches)) {
+    $requestUri = $matches[1]; // Get the base part of the URI without the ID
+    $id = $matches[2]; // Capture the numeric ID
 }
 
 // Handle CORS preflight requests
