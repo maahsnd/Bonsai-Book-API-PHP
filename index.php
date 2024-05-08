@@ -52,9 +52,7 @@ if (array_key_exists($requestUri, $routes)) {
     $method = $route['method'];
 
     if (method_exists($controller, $method)) {
-        $result = $id ? $controller->$method($id) : $controller->$method();
-        http_response_code(200);
-        echo json_encode($result);
+        $id ? $controller->$method($id) : $controller->$method();
     } else {
         http_response_code(405);
         echo json_encode(["error" => 'Method Not Allowed']);

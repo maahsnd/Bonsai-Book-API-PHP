@@ -28,9 +28,11 @@ class BonsaiController
             $stmt->execute();
 
             $lastid = $this->db->lastInsertId();
-            return $lastid;
+            http_response_code(200);
+            echo json_encode(["lastid" => $lastid]);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            http_response_code(500);
+            echo json_encode($e->getMessage());
         }
     }
 
@@ -42,9 +44,11 @@ class BonsaiController
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
-            return $result;
+            http_response_code(200);
+            echo json_encode($result);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            http_response_code(500);
+            echo json_encode($e->getMessage());
         }
     }
     public function fetchOneBonsai($id)
@@ -54,9 +58,11 @@ class BonsaiController
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
-            return $result;
+            http_response_code(200);
+            echo json_encode($result);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            http_response_code(500);
+            echo json_encode($e->getMessage());
         }
     }
     public function updateBonsai($id)
@@ -84,6 +90,7 @@ class BonsaiController
         if (empty($fieldsToUpdate)) {
             http_response_code(400);
             echo json_encode(["error" => "No data included to update"]);
+            return;
         }
 
         $sql = "UPDATE bonsais SET " . implode(', ', $fieldsToUpdate) . " WHERE id = :id";
@@ -95,10 +102,12 @@ class BonsaiController
                 $stmt->bindParam(':' . $key, $value);
             }
             $result = $stmt->execute();
-
-            return $result;
+            http_response_code((200));
+            echo json_encode($result);
+            return;
         } catch (PDOException $e) {
-            return $e->getMessage();
+            http_response_code(500);
+            echo json_encode($e->getMessage());
         }
     }
 }
