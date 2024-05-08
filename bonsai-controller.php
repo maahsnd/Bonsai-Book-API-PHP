@@ -10,6 +10,27 @@ class BonsaiController
         $this->db = $db;
     }
 
+    private function extractFields($requestMethod)
+    {
+        $fieldsToUpdate = [];
+        $data = [];
+
+        $fields = [
+            'species' => 'sanitize',
+            'origin_story' => 'sanitize',
+            'geolocation' => 'sanitize',
+            'photo_url' => null
+        ];
+
+        foreach ($fields as $field => $method) {
+            if (isset($requestMethod[$field])) {
+                $fieldsToUpdate[] = "$field = :$field";
+                $data[$field] = $method ? Utilities::$method($requestMethod[$field]) : $requestMethod[$field];
+            }
+        }
+        return ["fields" => $fieldsToUpdate, "data" => $data];
+    }
+
     public function addBonsai()
     {
         $species = Utilities::sanitize($_POST['species']);
@@ -75,22 +96,7 @@ class BonsaiController
             return;
         }
 
-        $fields = [
-            'species' => 'sanitize',
-            'origin_story' => 'sanitize',
-            'geolocation' => 'sanitize',
-            'photo_url' => null
-        ];
-
-        $fieldsToUpdate = [];
-        $data = [];
-
-        foreach ($fields as $field => $method) {
-            if (isset($_PUT[$field])) {
-                $fieldsToUpdate[] = "$field = :$field";
-                $data[$field] = $method ? Utilities::$method($_PUT[$field]) : $_PUT[$field];
-            }
-        }
+        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($_PUT);
 
         if (empty($fieldsToUpdate)) {
             http_response_code(400);
