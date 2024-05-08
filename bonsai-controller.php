@@ -67,24 +67,30 @@ class BonsaiController
     }
     public function updateBonsai($id)
     {
+        if ('PUT' === $_SERVER['REQUEST_METHOD']) {
+            parse_str(file_get_contents('php://input'), $_PUT);
+        } else {
+            http_response_code(405);
+            return;
+        }
         $fieldsToUpdate = [];
         $data = [];
 
-        if (isset($_POST['species'])) {
+        if (isset($_PUT['species'])) {
             $fieldsToUpdate[] = "species = :species";
-            $data['species'] = Utilities::sanitize($_POST['species']);
+            $data['species'] = Utilities::sanitize($_PUT['species']);
         }
-        if (isset($_POST['origin_story'])) {
+        if (isset($_PUT['origin_story'])) {
             $fieldsToUpdate[] = "origin_story = :origin_story";
-            $data['origin_story'] = Utilities::sanitize($_POST['origin_story']);
+            $data['origin_story'] = Utilities::sanitize($_PUT['origin_story']);
         }
-        if (isset($_POST['geolocation'])) {
+        if (isset($_PUT['geolocation'])) {
             $fieldsToUpdate[] = "geolocation = :geolocation";
-            $data['geolocation'] = Utilities::sanitize($_POST['geolocation']);
+            $data['geolocation'] = Utilities::sanitize($_PUT['geolocation']);
         }
-        if (isset($_POST['photo_url'])) {
+        if (isset($_PUT['photo_url'])) {
             $fieldsToUpdate[] = "photo_url = :photo_url";
-            $data['photo_url'] = $_POST['photo_url'];
+            $data['photo_url'] = $_PUT['photo_url'];
         }
 
         if (empty($fieldsToUpdate)) {
