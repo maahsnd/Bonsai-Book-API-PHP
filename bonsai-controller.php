@@ -59,14 +59,24 @@ class BonsaiController
 
     public function searchBonsai($searchTerms)
     //will need to sanitize search terms
-
     {
-
         try {
-            $stmt = $this->db->prepare("SELECT * FROM bonsais");
-            $stmt->execute();
-            $stmt->setFetchMode(PDO::FETCH_ASSOC);
-            $result = $stmt->fetchAll();
+            $sql = "SELECT * FROM bonsais";
+
+            ["fields" => $searchKeys, "data" => $searchValues] = $this->extractFields($searchTerms);
+
+            if (!empty($searchKeys)) {
+                $sql .= "WHERE $searchKeys";
+                $stmt = $this->db->prepare(($sql));
+                foreach ($searchValues as $key => &$value) {
+                    $stmt->bindParam(':' . $key, $value);
+                }
+            } else {
+                $sql .= "LIMIT 30";
+                $stmt = $this->db->prepare($sql);
+            }
+
+            $result = $stmt->execute();
             http_response_code(200);
             echo json_encode($result);
         } catch (PDOException $e) {
