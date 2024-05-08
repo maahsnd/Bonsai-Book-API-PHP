@@ -19,7 +19,7 @@ $routes = [
         'controller' => 'BonsaiController',
         'method' => 'fetchOneBonsai'
     ],
-    'update-bonsai' => [
+    '/update-bonsai' => [
         'controller' => 'BonsaiController',
         'method' => 'updateBonsai'
     ]
@@ -59,9 +59,7 @@ if (array_key_exists($requestUri, $routes)) {
         $id ? $controller->$method($id) : $controller->$method();
     } else {
         http_response_code(405);
-        echo json_encode(["error" => 'Method Not Allowed']);
     }
 } else {
     http_response_code(404);
-    echo json_encode(["error" => 'Not Found']);
 }
