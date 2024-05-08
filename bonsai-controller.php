@@ -51,6 +51,7 @@ class BonsaiController
             echo json_encode($e->getMessage());
         }
     }
+
     public function fetchOneBonsai($id)
     {
         try {
@@ -74,25 +75,21 @@ class BonsaiController
             return;
         }
 
+        $fields = [
+            'species' => 'sanitize',
+            'origin_story' => 'sanitize',
+            'geolocation' => 'sanitize',
+            'photo_url' => null
+        ];
 
         $fieldsToUpdate = [];
         $data = [];
 
-        if (isset($_PUT['species'])) {
-            $fieldsToUpdate[] = "species = :species";
-            $data['species'] = Utilities::sanitize($_PUT['species']);
-        }
-        if (isset($_PUT['origin_story'])) {
-            $fieldsToUpdate[] = "origin_story = :origin_story";
-            $data['origin_story'] = Utilities::sanitize($_PUT['origin_story']);
-        }
-        if (isset($_PUT['geolocation'])) {
-            $fieldsToUpdate[] = "geolocation = :geolocation";
-            $data['geolocation'] = Utilities::sanitize($_PUT['geolocation']);
-        }
-        if (isset($_PUT['photo_url'])) {
-            $fieldsToUpdate[] = "photo_url = :photo_url";
-            $data['photo_url'] = $_PUT['photo_url'];
+        foreach ($fields as $field => $method) {
+            if (isset($_PUT[$field])) {
+                $fieldsToUpdate[] = "$field = :$field";
+                $data[$field] = $method ? Utilities::$method($_PUT[$field]) : $_PUT[$field];
+            }
         }
 
         if (empty($fieldsToUpdate)) {
