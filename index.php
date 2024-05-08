@@ -13,7 +13,7 @@ $routes = [
     ],
     '/get-bonsai' => [
         'controller' => 'BonsaiController',
-        'method' => 'fetchAllBonsai'
+        'method' => 'searchBonsai'
     ],
     '/get-one-bonsai' => [
         'controller' => 'BonsaiController',
@@ -35,6 +35,12 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific bonsais
 $id = null;
+
+// Regular expression to detect URIs containing search terms
+if (preg_match('/^\/get-bonsai\/(.+)$/', $requestUri, $matches)) {
+    $requestUri = '/get-bonsai';
+    $searchTerms = $matches[1]; // Capture the search terms directly after '/get-bonsai/'
+}
 
 // Regular expression to detect URIs ending with numerical ID
 if (preg_match('/^(\/[a-z\-]+)\/(\d+)$/', $requestUri, $matches)) {
@@ -58,9 +64,12 @@ if (array_key_exists($requestUri, $routes)) {
 
     $controller = new $route['controller']($dbConnection);
     $method = $route['method'];
-
     if (method_exists($controller, $method)) {
-        $id ? $controller->$method($id) : $controller->$method();
+        if ($id || $searchTerms) {
+            $id ? $controller->$method($id) : $controller->$method($searchTerms);
+        } else {
+            $controller->$method;
+        }
     } else {
         http_response_code(405);
     }
