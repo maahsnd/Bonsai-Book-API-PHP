@@ -10,6 +10,13 @@ class BonsaiController
         $this->db = $db;
     }
 
+    private $validFields = [
+        'species',
+        'origin_story',
+        'geolocation',
+        'photo_url'
+    ];
+
     private function extractFields($fieldsObj)
     {
         $fieldsToUpdate = [];
@@ -58,32 +65,42 @@ class BonsaiController
     }
 
     public function searchBonsai($searchTerms)
-    //will need to sanitize search terms
     {
         try {
             $sql = "SELECT * FROM bonsais";
+            $conditions = [];
+            $params = [];
 
-            ["fields" => $searchKeys, "data" => $searchValues] = $this->extractFields($searchTerms);
-
-            if (!empty($searchKeys)) {
-                $sql .= "WHERE $searchKeys";
-                $stmt = $this->db->prepare(($sql));
-                foreach ($searchValues as $key => &$value) {
-                    $stmt->bindParam(':' . $key, $value);
+            // Validate and build conditions from search terms
+            foreach ($searchTerms as $key => $value) {
+                if (in_array($key, $this->validFields)) {
+                    $conditions[] = "$key = :$key";
+                    $params[$key] = Utilities::sanitize($value);
                 }
-            } else {
-                $sql .= "LIMIT 30";
-                $stmt = $this->db->prepare($sql);
             }
 
-            $result = $stmt->execute();
+            if (!empty($conditions)) {
+                $sql .= " WHERE " . implode(' AND ', $conditions);
+            } else {
+                $sql .= " LIMIT 30";
+            }
+
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($params as $key => &$value) {
+                $stmt->bindParam(':' . $key, $value);
+            }
+
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             http_response_code(200);
             echo json_encode($result);
         } catch (PDOException $e) {
             http_response_code(500);
-            echo json_encode($e->getMessage());
+            echo json_encode(['error' => $e->getMessage()]);
         }
     }
+
 
     public function fetchOneBonsai($id)
     {
