@@ -115,4 +115,16 @@ class BonsaiController
             echo json_encode($e->getMessage());
         }
     }
+
+    public function deleteBonsai($id)
+    {
+        try {
+            $stmt = $this->db->prepare("DELETE FROM bonsais WHERE id=$id");
+            $stmt->execute();
+            http_response_code(200);
+        } catch (PDOException $e) {
+            http_response_code(404);
+            echo json_encode($e->getMessage());
+        }
+    }
 }

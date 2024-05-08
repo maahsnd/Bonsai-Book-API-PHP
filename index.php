@@ -22,6 +22,10 @@ $routes = [
     '/update-bonsai' => [
         'controller' => 'BonsaiController',
         'method' => 'updateBonsai'
+    ],
+    '/delete-bonsai' => [
+        'controller' => 'BonsaiController',
+        'method' => 'deleteBonsai'
     ]
 ];
 
