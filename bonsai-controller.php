@@ -10,7 +10,7 @@ class BonsaiController
         $this->db = $db;
     }
 
-    private function extractFields($requestMethod)
+    private function extractFields($fieldsObj)
     {
         $fieldsToUpdate = [];
         $data = [];
@@ -23,9 +23,9 @@ class BonsaiController
         ];
 
         foreach ($fields as $field => $method) {
-            if (isset($requestMethod[$field])) {
+            if (isset($fieldsObj[$field])) {
                 $fieldsToUpdate[] = "$field = :$field";
-                $data[$field] = $method ? Utilities::$method($requestMethod[$field]) : $requestMethod[$field];
+                $data[$field] = $method ? Utilities::$method($fieldsObj[$field]) : $fieldsObj[$field];
             }
         }
         return ["fields" => $fieldsToUpdate, "data" => $data];
@@ -57,7 +57,9 @@ class BonsaiController
         }
     }
 
-    public function fetchAllBonsai()
+    public function searchBonsai($searchTerms)
+    //will need to sanitize search terms
+
     {
 
         try {
