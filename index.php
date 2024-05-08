@@ -35,11 +35,11 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific bonsais
 $id = null;
+$searchTerms = null;
 
-// Regular expression to detect URIs containing search terms
-if (preg_match('/^\/get-bonsai\/(.+)$/', $requestUri, $matches)) {
-    $requestUri = '/get-bonsai';
-    $searchTerms = $matches[1]; // Capture the search terms directly after '/get-bonsai/'
+if (strpos($_SERVER['REQUEST_URI'], '/get-bonsai') === 0) {
+    $requestUri = '/get-bonsai';  // Set the base URI
+    if (!empty($_GET)) $searchTerms = $_GET; //Copy terms if present
 }
 
 // Regular expression to detect URIs ending with numerical ID
