@@ -10,6 +10,10 @@ $routes = [
     '/user/add' => [
         'controller' => 'UserController',
         'method' => 'addUser'
+    ],
+    '/user/get' => [
+        'controller' => 'UserController',
+        'method' => 'getUser'
     ]
 ];
 
@@ -19,6 +23,13 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific user
 $id = null;
+
+$userIdRegex = '/^(\/user\/[A-Za-z]+)(\/\d+)$/';
+// Regular expression to detect URIs ending with numerical ID
+if (preg_match($userIdRegex, $requestUri, $matches)) {
+    $requestUri = $matches[1];  // Reset the URI to whatever preceded numerical ID
+    $id = substr($matches[2], 1); // Trim the leading slash, capture the numeric ID
+}
 
 // Handle CORS preflight requests
 if ($requestMethod == 'OPTIONS') {
