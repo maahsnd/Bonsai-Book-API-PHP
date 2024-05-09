@@ -37,16 +37,17 @@ $requestMethod = $_SERVER['REQUEST_METHOD'];
 $id = null;
 $searchTerms = null;
 
-if (strpos($_SERVER['REQUEST_URI'], '/bonsai/get') === 0) {
+if (strpos($_SERVER['REQUEST_URI'], '/bonsai/get?') === 0) {
     $requestUri = '/bonsai/get';  // Set the base URI
     if (!empty($_GET)) $searchTerms = $_GET; //Copy terms if present
 }
 
 // Regular expression to detect URIs ending with numerical ID
-if (preg_match('/^(\/[a-z\-]+)\/(\d+)$/', $requestUri, $matches)) {
-    $requestUri = $matches[1]; // Get the base part of the URI without the ID
-    $id = $matches[2]; // Capture the numeric ID
+if (preg_match('/^\/bonsai\/get-one\/(\d+)$/', $requestUri, $matches)) {
+    $requestUri = '/bonsai/get-one';  // Reset the URI
+    $id = $matches[1];                // Capture the numeric ID
 }
+
 
 // Handle CORS preflight requests
 if ($requestMethod == 'OPTIONS') {
@@ -60,6 +61,7 @@ if ($requestMethod == 'OPTIONS') {
 
 // Route the request
 if (array_key_exists($requestUri, $routes)) {
+
     $route = $routes[$requestUri];
 
     $controller = new $route['controller']($dbConnection);
