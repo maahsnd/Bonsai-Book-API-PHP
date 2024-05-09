@@ -28,7 +28,7 @@ class BonsaiController
             'origin_story' => 'sanitize',
             'geolocation' => 'sanitize',
             'author' => 'sanitize',
-            'photo_url' => null
+            'photo_url' => 'trimAndEsc'
         ];
 
         foreach ($fields as $field => $method) {
@@ -45,7 +45,7 @@ class BonsaiController
         $species = Utilities::sanitize($_POST['species']);
         $origin_story = Utilities::sanitize($_POST['origin_story']);
         $geolocation = Utilities::sanitize($_POST['geolocation']);
-        $photo_url = $_POST['photo_url'];
+        $photo_url = Utilities::trimAndEsc($_POST['photo_url']);
         $author = Utilities::sanitize($_POST['author']);
 
         try {
