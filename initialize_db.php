@@ -10,8 +10,19 @@ try {
     $db->exec("CREATE TABLE IF NOT EXISTS bonsais (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         species VARCHAR(75) NOT NULL,
-        origin_story VARCHAR(75),
-        geolocation VARCHAR(255) NOT NULL,
+        origin_story VARCHAR(255),
+        geolocation VARCHAR(75) NOT NULL,
+        photo_url TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        author INTEGER NOT NULL
+    )");
+
+
+    $db->exec("CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        username VARCHAR(75) NOT NULL,
+        bio VARCHAR(255),
+        geolocation VARCHAR(75) NOT NULL,
         photo_url TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )");
