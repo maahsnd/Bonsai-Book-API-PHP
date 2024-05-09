@@ -7,6 +7,15 @@ try {
     // Set errormode to exceptions
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+    $db->exec("CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        username VARCHAR(75) NOT NULL UNIQUE,
+        bio VARCHAR(255),
+        geolocation VARCHAR(75) NOT NULL,
+        photo_url TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    )");
+
     $db->exec("CREATE TABLE IF NOT EXISTS bonsais (
         id INTEGER PRIMARY KEY AUTOINCREMENT, 
         species VARCHAR(75) NOT NULL,
@@ -14,20 +23,11 @@ try {
         geolocation VARCHAR(75) NOT NULL,
         photo_url TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        author INTEGER NOT NULL
+        author INTEGER NOT NULL,
+        FOREIGN KEY (author) REFERENCES users(id) ON DELETE CASCADE
     )");
 
-
-    $db->exec("CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        username VARCHAR(75) NOT NULL,
-        bio VARCHAR(255),
-        geolocation VARCHAR(75) NOT NULL,
-        photo_url TEXT,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-    )");
-
-    echo "Database and bonsais table created successfully.";
+    echo "Database, users and bonsais table created successfully.";
 } catch (PDOException $e) {
     echo "An error occurred: " . $e->getMessage();
 }
