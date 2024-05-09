@@ -46,7 +46,7 @@ class BonsaiController
         $origin_story = Utilities::sanitize($_POST['origin_story']);
         $geolocation = Utilities::sanitize($_POST['geolocation']);
         $photo_url = $_POST['photo_url'];
-        $author = $_POST['author'];
+        $author = Utilities::sanitize($_POST['author']);
 
         try {
             $stmt = $this->db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, author, photo_url) 
