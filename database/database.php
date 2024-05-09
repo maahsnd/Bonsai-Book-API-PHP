@@ -5,7 +5,9 @@ class Database
 
     public function __construct()
     {
-        $this->db = new PDO('sqlite:bonsai_book.db');
+        // Set the absolute path to the database file 
+        $path = __DIR__ . '/../database/bonsai_book.db';
+        $this->db = new PDO('sqlite:' . $path);
         $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
 
