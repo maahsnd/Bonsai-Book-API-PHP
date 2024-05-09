@@ -7,38 +7,38 @@ $database = new Database();
 $dbConnection = $database->getConnection();
 
 $routes = [
-    '/add' => [
+    '/bonsai/add' => [
         'controller' => 'BonsaiController',
         'method' => 'addBonsai'
     ],
-    '/get' => [
+    '/bonsai/get' => [
         'controller' => 'BonsaiController',
         'method' => 'searchBonsai'
     ],
-    '/get-one' => [
+    '/bonsai/get-one' => [
         'controller' => 'BonsaiController',
         'method' => 'fetchOneBonsai'
     ],
-    '/update' => [
+    '/bonsai/update' => [
         'controller' => 'BonsaiController',
         'method' => 'updateBonsai'
     ],
-    '/delete' => [
+    '/bonsai/delete' => [
         'controller' => 'BonsaiController',
         'method' => 'deleteBonsai'
     ]
 ];
 
 // Parse the request
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific bonsais
 $id = null;
 $searchTerms = null;
 
-if (strpos($_SERVER['REQUEST_URI'], '/get') === 0) {
-    $requestUri = '/get';  // Set the base URI
+if (strpos($_SERVER['REQUEST_URI'], '/bonsai/get') === 0) {
+    $requestUri = '/bonsai/get';  // Set the base URI
     if (!empty($_GET)) $searchTerms = $_GET; //Copy terms if present
 }
 

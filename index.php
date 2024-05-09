@@ -1,15 +1,13 @@
 <?php
 
 $requestUri = $_SERVER['REQUEST_URI'];
-echo $requestUri;
-return;
+$BONSAIROUTE = '/bonsai';
+$USERROUTE = '/user';
 
-if (strpos($requestUri, '/bonsai') === 0) {
-    $requestUri = substr($requestUri, 7);
-    require 'bonsai-router.php';
-} elseif (strpos($requestUri, '/user') === 0) {
-    $requestUri = substr($requestUri, 5);
-    require 'user-router.php';
+if (strpos($requestUri, $BONSAIROUTE) === 0) {
+    require 'routers/bonsai-router.php';
+} elseif (strpos($requestUri, $USERROUTE) === 0) {
+    require 'routers/user-router.php';
 } else {
     http_response_code(404);
     echo json_encode(['error' => 'Resource not found']);
