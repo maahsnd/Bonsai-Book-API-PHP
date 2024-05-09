@@ -1,78 +1,16 @@
 <?php
 
-require_once 'database/database.php';
-require_once 'controllers/bonsai-controller.php';
+$requestUri = $_SERVER['REQUEST_URI'];
+echo $requestUri;
+return;
 
-$database = new Database();
-$dbConnection = $database->getConnection();
-
-$routes = [
-    '/add-bonsai' => [
-        'controller' => 'BonsaiController',
-        'method' => 'addBonsai'
-    ],
-    '/get-bonsai' => [
-        'controller' => 'BonsaiController',
-        'method' => 'searchBonsai'
-    ],
-    '/get-one-bonsai' => [
-        'controller' => 'BonsaiController',
-        'method' => 'fetchOneBonsai'
-    ],
-    '/update-bonsai' => [
-        'controller' => 'BonsaiController',
-        'method' => 'updateBonsai'
-    ],
-    '/delete-bonsai' => [
-        'controller' => 'BonsaiController',
-        'method' => 'deleteBonsai'
-    ]
-];
-
-// Parse the request
-$requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$requestMethod = $_SERVER['REQUEST_METHOD'];
-
-// Handle requests for specific bonsais
-$id = null;
-$searchTerms = null;
-
-if (strpos($_SERVER['REQUEST_URI'], '/get-bonsai') === 0) {
-    $requestUri = '/get-bonsai';  // Set the base URI
-    if (!empty($_GET)) $searchTerms = $_GET; //Copy terms if present
-}
-
-// Regular expression to detect URIs ending with numerical ID
-if (preg_match('/^(\/[a-z\-]+)\/(\d+)$/', $requestUri, $matches)) {
-    $requestUri = $matches[1]; // Get the base part of the URI without the ID
-    $id = $matches[2]; // Capture the numeric ID
-}
-
-// Handle CORS preflight requests
-if ($requestMethod == 'OPTIONS') {
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    header('Content-Type: application/json');
-    http_response_code(200);
-    exit();
-}
-
-// Route the request
-if (array_key_exists($requestUri, $routes)) {
-    $route = $routes[$requestUri];
-
-    $controller = new $route['controller']($dbConnection);
-    $method = $route['method'];
-    if (method_exists($controller, $method)) {
-        if ($id || $searchTerms) {
-            $id ? $controller->$method($id) : $controller->$method($searchTerms);
-        } else {
-            $controller->$method;
-        }
-    } else {
-        http_response_code(405);
-    }
+if (strpos($requestUri, '/bonsai') === 0) {
+    $requestUri = substr($requestUri, 7);
+    require 'bonsai-router.php';
+} elseif (strpos($requestUri, '/user') === 0) {
+    $requestUri = substr($requestUri, 5);
+    require 'user-router.php';
 } else {
     http_response_code(404);
+    echo json_encode(['error' => 'Resource not found']);
 }
