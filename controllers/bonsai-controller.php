@@ -69,22 +69,21 @@ class BonsaiController
         }
     }
 
-    public function searchBonsai($searchTerms)
+    public function searchBonsai($searchTerms = [])
     {
         try {
             $sql = "SELECT * FROM bonsais";
             $conditions = [];
             $params = [];
 
-            // Validate and build conditions from search terms
-            foreach ($searchTerms as $key => $value) {
-                if (in_array($key, $this->validFields)) {
-                    $conditions[] = "$key = :$key";
-                    $params[$key] = Utilities::sanitize($value);
-                }
-            }
-
             if (!empty($conditions)) {
+                // Validate and build conditions from search terms
+                foreach ($searchTerms as $key => $value) {
+                    if (in_array($key, $this->validFields)) {
+                        $conditions[] = "$key = :$key";
+                        $params[$key] = Utilities::sanitize($value);
+                    }
+                }
                 $sql .= " WHERE " . implode(' AND ', $conditions);
             } else {
                 $sql .= " LIMIT 30";
