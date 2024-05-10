@@ -18,8 +18,9 @@ class UserController
         $photo_url = Utilities::trimAndEsc($_POST['photo_url']);
 
         try {
-            $stmt = $this->db->prepare("INSERT INTO users (username, bio, geolocation,photo_url) 
-            VALUES (:username, :bio, :geolocation, :photo_url)");
+            $sql = "INSERT INTO users (username, bio, geolocation,photo_url) 
+            VALUES (:username, :bio, :geolocation, :photo_url)";
+            $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':username', $username);
             $stmt->bindParam(':bio', $bio);
             $stmt->bindParam(':geolocation', $geolocation);
@@ -39,7 +40,8 @@ class UserController
     public function getUser($id)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM users WHERE id=$id");
+            $sql = "SELECT * FROM users WHERE id=$id";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
