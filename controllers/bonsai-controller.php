@@ -50,7 +50,7 @@ class BonsaiController
 
         try {
             $sql = "INSERT INTO bonsais (species, origin_story, geolocation, author, photo_url) 
-            VALUES (:species, :origin_story, :geolocation, :photo_url)";
+            VALUES (:species, :origin_story, :geolocation, :author, :photo_url)";
             $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':species', $species);
             $stmt->bindParam(':origin_story', $origin_story);
