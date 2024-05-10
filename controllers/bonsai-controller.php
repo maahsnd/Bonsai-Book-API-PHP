@@ -49,8 +49,9 @@ class BonsaiController
         $author = Utilities::sanitize($_POST['author']);
 
         try {
-            $stmt = $this->db->prepare("INSERT INTO bonsais (species, origin_story, geolocation, author, photo_url) 
-            VALUES (:species, :origin_story, :geolocation, :photo_url)");
+            $sql = "INSERT INTO bonsais (species, origin_story, geolocation, author, photo_url) 
+            VALUES (:species, :origin_story, :geolocation, :photo_url)";
+            $stmt = $this->db->prepare($sql);
             $stmt->bindParam(':species', $species);
             $stmt->bindParam(':origin_story', $origin_story);
             $stmt->bindParam(':geolocation', $geolocation);
@@ -109,7 +110,8 @@ class BonsaiController
     public function fetchOneBonsai($id)
     {
         try {
-            $stmt = $this->db->prepare("SELECT * FROM bonsais WHERE id=$id");
+            $sql = "SELECT * FROM bonsais WHERE id=$id";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             $stmt->setFetchMode(PDO::FETCH_ASSOC);
             $result = $stmt->fetchAll();
@@ -158,7 +160,8 @@ class BonsaiController
     public function deleteBonsai($id)
     {
         try {
-            $stmt = $this->db->prepare("DELETE FROM bonsais WHERE id=$id");
+            $sql = "DELETE FROM bonsais WHERE id=$id";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute();
             http_response_code(200);
         } catch (PDOException $e) {
