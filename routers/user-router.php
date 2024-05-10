@@ -3,6 +3,10 @@
 require_once 'database/database.php';
 require_once 'controllers/user-controller.php';
 
+// Parse the request
+$requestUri = $_SERVER['REQUEST_URI'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
+
 // Handle CORS preflight requests
 if ($requestMethod == 'OPTIONS') {
     header("Access-Control-Allow-Origin: *");
@@ -26,10 +30,6 @@ $routes = [
         'method' => 'getUser'
     ]
 ];
-
-// Parse the request
-$requestUri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific user
 $id = null;

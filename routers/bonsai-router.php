@@ -3,6 +3,9 @@
 require_once 'database/database.php';
 require_once 'controllers/bonsai-controller.php';
 
+// Parse the request
+$requestUri = $_SERVER['REQUEST_URI'];
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle CORS preflight requests
 if ($requestMethod == 'OPTIONS') {
@@ -39,10 +42,6 @@ $routes = [
         'method' => 'deleteBonsai'
     ]
 ];
-
-// Parse the request
-$requestUri = $_SERVER['REQUEST_URI'];
-$requestMethod = $_SERVER['REQUEST_METHOD'];
 
 // Handle requests for specific bonsais
 $id = null;
