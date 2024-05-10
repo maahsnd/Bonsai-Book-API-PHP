@@ -89,7 +89,6 @@ class BonsaiController
                 }
                 $sql .= " WHERE " . implode(' AND ', $conditions);
             } else {
-                echo "uh oh";
                 $sql .= " LIMIT 30";
             }
 
