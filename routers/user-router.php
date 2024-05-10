@@ -3,6 +3,16 @@
 require_once 'database/database.php';
 require_once 'controllers/user-controller.php';
 
+// Handle CORS preflight requests
+if ($requestMethod == 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization");
+    header('Content-Type: application/json');
+    http_response_code(200);
+    exit();
+}
+
 $database = new Database();
 $dbConnection = $database->getConnection();
 
@@ -31,15 +41,7 @@ if (preg_match($userIdRegex, $requestUri, $matches)) {
     $id = substr($matches[2], 1); // Trim the leading slash, capture the numeric ID
 }
 
-// Handle CORS preflight requests
-if ($requestMethod == 'OPTIONS') {
-    header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
-    header("Access-Control-Allow-Headers: Content-Type, Authorization");
-    header('Content-Type: application/json');
-    http_response_code(200);
-    exit();
-}
+
 
 // Route the request
 if (array_key_exists($requestUri, $routes)) {
