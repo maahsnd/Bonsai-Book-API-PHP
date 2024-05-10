@@ -70,7 +70,7 @@ if (array_key_exists($requestUri, $routes)) {
         if ($id || $searchTerms) {
             $id ? $controller->$method($id) : $controller->$method($searchTerms);
         } else {
-            $controller->$method;
+            $controller->$method();
         }
     } else {
         http_response_code(405);
