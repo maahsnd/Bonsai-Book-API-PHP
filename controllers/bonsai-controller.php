@@ -76,16 +76,20 @@ class BonsaiController
             $conditions = [];
             $params = [];
 
-            if (!empty($conditions)) {
+            if (!empty($searchTerms)) {
                 // Validate and build conditions from search terms
                 foreach ($searchTerms as $key => $value) {
                     if (in_array($key, $this->validFields)) {
                         $conditions[] = "$key = :$key";
-                        $params[$key] = Utilities::sanitize($value);
+                        $cleanVal = Utilities::sanitize($value);
+                        //Data is stored with spaces, search terms are passed with underscores
+                        $processedVal = str_replace('_', ' ', $cleanVal);
+                        $params[$key] = $processedVal;
                     }
                 }
                 $sql .= " WHERE " . implode(' AND ', $conditions);
             } else {
+                echo "uh oh";
                 $sql .= " LIMIT 30";
             }
 
@@ -97,8 +101,12 @@ class BonsaiController
 
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            http_response_code(200);
-            echo json_encode($result);
+            if (empty($result)) {
+                http_response_code(404);
+            } else {
+                http_response_code(200);
+                echo json_encode($result);
+            }
         } catch (PDOException $e) {
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);
