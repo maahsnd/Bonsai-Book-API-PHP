@@ -52,11 +52,11 @@ if (strpos($_SERVER['REQUEST_URI'], '/bonsai/get?') === 0) {
     if (!empty($_GET)) $searchTerms = $_GET; //Copy terms if present
 }
 
-$bonsaiIdRegex = '/^\/bonsai\/get-one\/(\d+)$/';
+$bonsaiIdRegex = '/^(\/bonsai\/[A-Za-z]+)(\/\d+)$/';
 // Regular expression to detect URIs ending with numerical ID
 if (preg_match($bonsaiIdRegex, $requestUri, $matches)) {
-    $requestUri = '/bonsai/get-one';  // Reset the URI
-    $id = $matches[1];                // Capture the numeric ID
+    $requestUri = $matches[1];  // Reset the URI to whatever preceded numerical ID
+    $id = substr($matches[2], 1); // Trim the leading slash, capture the numeric ID
 }
 
 // Route the request
