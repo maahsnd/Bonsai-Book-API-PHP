@@ -41,8 +41,6 @@ if (preg_match($userIdRegex, $requestUri, $matches)) {
     $id = substr($matches[2], 1); // Trim the leading slash, capture the numeric ID
 }
 
-
-
 // Route the request
 if (array_key_exists($requestUri, $routes)) {
 
