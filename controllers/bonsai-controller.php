@@ -20,6 +20,7 @@ class BonsaiController
 
     private function extractFields($fieldsObj)
     {
+        // fieldsObj format is [field => fieldValue]
         $fieldsToUpdate = [];
         $data = [];
 
@@ -131,13 +132,23 @@ class BonsaiController
     public function updateBonsai($id)
     {
         if ('PUT' === $_SERVER['REQUEST_METHOD']) {
-            parse_str(file_get_contents('php://input'), $_PUT);
+
+            $argStr = file_get_contents('php://input');
+            //Input arrives as string e.g 'category:value&category:value'
+            //Separate into fields
+            $fieldsArr = explode('&', $argStr);
+            $processedFields = [];
+
+            foreach ($fieldsArr as $field) {
+                [$k, $v] = explode(":", $field);
+                $processedFields += [$k => $v];
+            }
         } else {
             http_response_code(405);
             return;
         }
 
-        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($_PUT);
+        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($processedFields);
 
         if (empty($fieldsToUpdate)) {
             http_response_code(400);
