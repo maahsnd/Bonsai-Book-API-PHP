@@ -132,23 +132,13 @@ class BonsaiController
     public function updateBonsai($id)
     {
         if ('PUT' === $_SERVER['REQUEST_METHOD']) {
-
-            $argStr = file_get_contents('php://input');
-            //Input arrives as string e.g 'category:value&category:value'
-            //Separate into fields
-            $fieldsArr = explode('&', $argStr);
-            $processedFields = [];
-
-            foreach ($fieldsArr as $field) {
-                [$k, $v] = explode(":", $field);
-                $processedFields += [$k => $v];
-            }
+            parse_str(file_get_contents('php://input'), $_PUT);
         } else {
             http_response_code(405);
             return;
         }
 
-        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($processedFields);
+        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($_PUT);
 
         if (empty($fieldsToUpdate)) {
             http_response_code(400);
