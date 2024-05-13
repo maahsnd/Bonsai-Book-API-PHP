@@ -105,11 +105,19 @@ class UserController
 
     public function deleteUser($id)
     {
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-
-        if (empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
+        if (!Utilities::validateUser($id)) {
             http_response_code(401);
             return;
         };
+        try {
+            $sql = "DELETE FROM users WHERE id=$id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute();
+            echo json_encode("User $id deleted");
+            http_response_code(200);
+        } catch (PDOException $e) {
+            http_response_code(404);
+            echo json_encode($e->getMessage());
+        }
     }
 }
