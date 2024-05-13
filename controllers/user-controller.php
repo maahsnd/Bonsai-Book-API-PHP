@@ -55,17 +55,13 @@ class UserController
 
     public function updateUser($id)
     {
-        //Test after user edits implemented
 
-/*         $headers = getallheaders();
-        if(in_array('Authorization', $headers)) {
-            $authToken = $headers['Authorization'];
-            $valid = Utilities::validateUser($authToken, $id);
-            if ($valid == false) {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+    
+        if(!empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
                 http_response_code(401);
                 return;
-            }
-        } */
+        };
 
         if ('PUT' === $_SERVER['REQUEST_METHOD']) {
             parse_str(file_get_contents('php://input'), $_PUT);
