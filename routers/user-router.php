@@ -32,7 +32,11 @@ $routes = [
     '/user/update' => [
         'controller' => 'UserController',
         'method' => 'updateUser'
-    ] 
+    ],
+    '/user/delete' => [
+        'controller' => 'UserController',
+        'method' => 'deleteUser'
+    ]
 ];
 
 // Handle requests for specific user
