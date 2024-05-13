@@ -57,10 +57,10 @@ class UserController
     {
 
         $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-    
-        if(!empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
-                http_response_code(401);
-                return;
+
+        if (empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
+            http_response_code(401);
+            return;
         };
 
         if ('PUT' === $_SERVER['REQUEST_METHOD']) {
@@ -79,7 +79,7 @@ class UserController
 
         ["fields" => $fieldsToUpdate, "data" => $data] = Utilities::extractFields($_PUT, $fields);
 
-        
+
 
         if (empty($fieldsToUpdate)) {
             http_response_code(400);
