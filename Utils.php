@@ -24,4 +24,11 @@ class Utilities
         }
         return $input;
     }
+    // Minimal implementation for development purposes
+    public static function validateUser($providedCredentials, $requestedCredentials) {
+        if ($providedCredentials === $requestedCredentials) return true;
+        else {
+            return false;
+        }
+    }
 }
