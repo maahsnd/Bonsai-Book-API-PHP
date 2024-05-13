@@ -18,29 +18,6 @@ class BonsaiController
         'author'
     ];
 
-    private function extractFields($fieldsObj)
-    {
-        // fieldsObj format is [field => fieldValue]
-        $fieldsToUpdate = [];
-        $data = [];
-
-        $fields = [
-            'species' => 'sanitize',
-            'origin_story' => 'sanitize',
-            'geolocation' => 'sanitize',
-            'author' => 'sanitize',
-            'photo_url' => 'trimAndEsc'
-        ];
-
-        foreach ($fields as $field => $method) {
-            if (isset($fieldsObj[$field])) {
-                $fieldsToUpdate[] = "$field = :$field";
-                $data[$field] = $method ? Utilities::$method($fieldsObj[$field]) : $fieldsObj[$field];
-            }
-        }
-        return ["fields" => $fieldsToUpdate, "data" => $data];
-    }
-
     public function addBonsai()
     {
         $species = Utilities::sanitize($_POST['species']);
@@ -138,7 +115,15 @@ class BonsaiController
             return;
         }
 
-        ["fields" => $fieldsToUpdate, "data" => $data] = $this->extractFields($_PUT);
+        $fields = [
+            'species' => 'sanitize',
+            'origin_story' => 'sanitize',
+            'geolocation' => 'sanitize',
+            'author' => 'sanitize',
+            'photo_url' => 'trimAndEsc'
+        ];
+
+        ["fields" => $fieldsToUpdate, "data" => $data] = Utilities::extractFields($_PUT, $fields);
 
         if (empty($fieldsToUpdate)) {
             http_response_code(400);

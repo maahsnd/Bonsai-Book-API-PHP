@@ -31,4 +31,18 @@ class Utilities
             return false;
         }
     }
+    public static function extractFields($fieldsObj, $validFieldsAndMethods)
+    {
+        // fieldsObj format is [field => fieldValue]
+        $fieldsToUpdate = [];
+        $data = [];
+
+        foreach ($validFieldsAndMethods as $field => $method) {
+            if (isset($fieldsObj[$field])) {
+                $fieldsToUpdate[] = "$field = :$field";
+                $data[$field] = $method ? Utilities::$method($fieldsObj[$field]) : $fieldsObj[$field];
+            }
+        }
+        return ["fields" => $fieldsToUpdate, "data" => $data];
+    }
 }
