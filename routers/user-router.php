@@ -28,7 +28,11 @@ $routes = [
     '/user/get' => [
         'controller' => 'UserController',
         'method' => 'getUser'
-    ]
+    ],
+    '/user/update' => [
+        'controller' => 'UserController',
+        'method' => 'updateUser'
+    ] 
 ];
 
 // Handle requests for specific user

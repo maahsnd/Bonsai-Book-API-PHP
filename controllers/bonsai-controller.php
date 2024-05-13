@@ -106,6 +106,7 @@ class BonsaiController
             echo json_encode($e->getMessage());
         }
     }
+    
     public function updateBonsai($id)
     {
         if ('PUT' === $_SERVER['REQUEST_METHOD']) {
