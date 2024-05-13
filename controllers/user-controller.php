@@ -56,9 +56,7 @@ class UserController
     public function updateUser($id)
     {
 
-        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
-
-        if (empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
+        if (!Utilities::validateUser($id)) {
             http_response_code(401);
             return;
         };
@@ -103,5 +101,15 @@ class UserController
             http_response_code(500);
             echo json_encode($e->getMessage());
         }
+    }
+
+    public function deleteUser($id)
+    {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+
+        if (empty($authHeader) || !Utilities::validateUser($authHeader, $id)) {
+            http_response_code(401);
+            return;
+        };
     }
 }

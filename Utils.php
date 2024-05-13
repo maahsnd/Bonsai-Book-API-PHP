@@ -25,8 +25,12 @@ class Utilities
         return $input;
     }
     // Minimal implementation for development purposes
-    public static function validateUser($providedCredentials, $requestedCredentials)
+    public static function validateUser($requestedCredentials)
     {
+        $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
+        if (empty($authHeader)) {
+            return false;
+        };
         return true;
     }
     public static function extractFields($fieldsObj, $validFieldsAndMethods)
